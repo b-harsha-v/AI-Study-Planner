@@ -2,7 +2,10 @@ import Task from "../models/task.model.js";
 
 export const createTask = async (req, res) => {
   try {
-    const task = await Task.create(req.body);
+    const task = await Task.create({
+      ...req.body,
+      userId: req.user._id,
+    });
     res.status(201).json(task);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -12,7 +15,7 @@ export const createTask = async (req, res) => {
 // GET ALL TASKS
 export const getTasks = async (req, res) => {
   try {
-    const tasks = await Task.find({ userId: req.query.userId });
+    const tasks = await Task.find({ userId: req.user._id });
     res.json(tasks);
   } catch (error) {
     res.status(500).json({ message: error.message });
